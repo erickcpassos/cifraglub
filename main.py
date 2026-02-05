@@ -9,6 +9,15 @@ import os
 from difflib import SequenceMatcher
 from typing import Dict
 
+configs = {
+    "color": {
+        "chords": "green",
+        "lyrics": "white",
+    },
+    "sparse": False,
+    "nocache": False
+}
+
 def parse_to_dashes(s: str) -> str:
     words = s.strip().split(' ')
     words_lowercase = [x.lower() for x in words]
@@ -48,16 +57,37 @@ def get_song_page(artist, song):
         r = requests.get(url)
         if r.status_code == 301:
             raise Exception("This url was not found.")
-        
         return r
     except:
         raise Exception("Something wrong happened.")
 
-def cache_artist_songs(artist) -> list[Dict]:
+def cache_artist_songs(artist_id, song_list) -> None:
     """
-    Saves the song list for a given artist in a json file. Returns the song list as a dictionary.
+    Saves the song list for a given artist in a json file.
     """
+
+    os.makedirs("artists/", exist_ok=True)
+
+    try:
+        with open(f"artists/{artist_id}.json", mode="w+", encoding="utf-8") as write_file:
+            json.dump(song_list, write_file)
+
+        print("Successfully cached song list for " + artist)
+    except:
+        print("The song list was not cached.")
+
+def get_artist_song_list(artist) -> list[Dict]:
+    artist = parse_to_dashes(artist)
+
     artist_dashes = parse_to_dashes(artist)
+    
+    # if artist's song list is cached
+    if os.path.isfile(f"artists/{artist}.json"):
+        data = ""
+        with open(f"artists/{artist}.json", mode="r", encoding="utf-8") as f:
+            data = f.read()
+        return json.loads(data)
+    
     res = requests.get(f"https://www.cifraclub.com.br/{artist_dashes}/musicas.html")  
     page = res.text
     soup = BeautifulSoup(page, 'html.parser')
@@ -66,34 +96,10 @@ def cache_artist_songs(artist) -> list[Dict]:
     # ignores first six elements bc they are not song links (from manual analysis)
     song_urls = list(map(lambda x: {"title": x.get_text(), "url": x.get('href')}, song_urls))[6:]
 
-    os.makedirs("artists/", exist_ok=True)
+    if not configs["nocache"]:
+        cache_artist_songs(artist_dashes, song_urls)
 
-    with open(f"artists/{artist_dashes}.json", mode="w+", encoding="utf-8") as write_file:
-        json.dump(song_urls, write_file)
-
-    print("Successfully cached song list for " + artist)   
     return song_urls
-
-def get_artist_song_list(artist) -> list[Dict]:
-    artist = parse_to_dashes(artist)
-
-    if not os.path.isfile(f"artists/{artist}.json"):
-        return cache_artist_songs(artist)
-
-    data = ""
-    with open(f"artists/{artist}.json", mode="r", encoding="utf-8") as f:
-        data = f.read()
-    
-    return json.loads(data)
-        
-
-configs = {
-    "color": {
-        "chords": "green",
-        "lyrics": "white",
-    },
-    "sparse": False,
-}
 
 if __name__ == "__main__":
     
@@ -101,21 +107,24 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="cifraglub")
     parser.add_argument("artist")
     parser.add_argument("song")
+    parser.add_argument("--nocache", action="store_true")
 
     args = parser.parse_args()
     artist = args.artist
     song = args.song
 
+    configs['nocache'] = args.nocache
+
     soup = BeautifulSoup(get_song_page(artist, song).text, "html.parser")
     chords = soup.find('pre') 
-    
-    if chords is not None:
-        lines = chords.get_text().split('\n')
-        lines = list(filter(lambda x: len(x) > 1, lines))
 
-        for idx, l in enumerate(lines):
-            if idx % 2 == 0:
-                cprint(l, configs["color"]["chords"])
+    if chords is not None: # print chords
+        lines = chords.contents
+        for s in lines:
+            s_str = str(s)
+            if "<b>" in s_str:
+                s_str = s_str.replace("<b>", "").replace("</b>", "")
+                cprint(s_str, configs["color"]["chords"], end="")
             else:
-                cprint(l + ("\n" if configs["sparse"] else ""), configs["color"]["lyrics"])
-            
+                cprint(s_str + ("\n" if configs["sparse"] else ""), configs["color"]["lyrics"], end="")
+        print("\n")
