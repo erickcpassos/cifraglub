@@ -12,6 +12,9 @@ pip install -r requirements.py
 Execute o main.py da seguinte forma:
 
 ```
+>>> python -m venv venv         // cria o ambiente virtual
+>>> source venv/bin/activate    // no Linux, procura aí como ativa o venv no Windows
+>>> pip install -r requirements.py
 >>> python main.py "nome do artista" "nome da musica"
 ```
 
