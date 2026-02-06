@@ -1,14 +1,14 @@
-beautifulsoup4 @ file:///C:/miniconda3/conda-bld/beautifulsoup4-split_1764159464919/work
-brotlicffi @ file:///C:/miniconda3/conda-bld/brotlicffi_1764961392766/work
-certifi @ file:///C:/Users/task_176765924091863/croot/certifi_1767659364229/work/certifi
-cffi @ file:///C:/miniconda3/conda-bld/cffi_1761832793693/work
-charset-normalizer @ file:///C:/miniconda3/conda-bld/charset-normalizer_1761744988796/work
-idna @ file:///C:/Users/dev-admin/buildout/croot/idna_1762551230734/work
-pycparser @ file:///C:/Users/dev-admin/buildout/croot/pycparser_1759955361075/work
-PySocks @ file:///C:/miniconda3/conda-bld/pysocks_1761753029698/work
-requests @ file:///C:/miniconda3/conda-bld/requests_1762359708170/work
-soupsieve @ file:///C:/Users/dev-admin/buildout/croot/soupsieve_1761938454850/work
-termcolor @ file:///C:/miniconda3/conda-bld/termcolor_1762431194460/work
-typing_extensions @ file:///C:/Users/dev-admin/buildout/croot/typing_extensions_1759955056205/work
-urllib3 @ file:///C:/Users/task_176781036399437/croot/urllib3_1767810487549/work
-win_inet_pton @ file:///C:/miniconda3/conda-bld/win_inet_pton_1761746275387/work
+beautifulsoup4
+brotlicffi
+certifi
+cffi
+charset-normalizer
+idna
+pycparser
+PySocks
+requests
+soupsieve
+termcolor
+typing_extensions
+urllib3
+win_inet_pton

@@ -6,7 +6,7 @@ Uma aplicação CLI para conseguir tocar violão sem esperar horas pro site da p
 
 Instale as dependências descritas no requirements.py (não testei o comando abaixo. Se não funcionar, é só olhar as mensagens de erro e instalar as dependências manualmente):
 ```
-pip install -r requirements.txt
+pip install -r requirements.py
 ```
 
 Execute o main.py da seguinte forma:
