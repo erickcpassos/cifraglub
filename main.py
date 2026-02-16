@@ -15,7 +15,8 @@ configs = {
         "lyrics": "white",
     },
     "sparse": False,
-    "nocache": False
+    "nocache": False,
+    "notabs": False,
 }
 
 def parse_to_dashes(s: str) -> str:
@@ -108,23 +109,35 @@ if __name__ == "__main__":
     parser.add_argument("artist")
     parser.add_argument("song")
     parser.add_argument("--nocache", action="store_true")
+    parser.add_argument("--notabs", action="store_true")
 
     args = parser.parse_args()
     artist = args.artist
     song = args.song
 
     configs['nocache'] = args.nocache
+    configs['notabs'] = args.notabs
 
     soup = BeautifulSoup(get_song_page(artist, song).text, "html.parser")
     chords = soup.find('pre') 
 
+    tabs = soup.find_all(class_="tablatura")
+
     if chords is not None: # print chords
         lines = chords.contents
+        
         for s in lines:
+            if all(c == '\n' for c in s):
+                continue
+
+            if configs["notabs"] and s in tabs:
+                continue
+
             s_str = str(s)
             if "<b>" in s_str:
                 s_str = s_str.replace("<b>", "").replace("</b>", "")
                 cprint(s_str, configs["color"]["chords"], end="")
             else:
                 cprint(s_str + ("\n" if configs["sparse"] else ""), configs["color"]["lyrics"], end="")
+
         print("\n")
