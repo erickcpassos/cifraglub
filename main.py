@@ -1,5 +1,5 @@
 import requests
-from termcolor import cprint
+from termcolor import cprint, colored
 import argparse
 import re
 from bs4 import BeautifulSoup
@@ -13,6 +13,7 @@ configs = {
     "color": {
         "chords": "green",
         "lyrics": "white",
+        "sections": "blue",
     },
     "sparse": False,
     "nocache": False,
@@ -137,6 +138,13 @@ if __name__ == "__main__":
             if "<b>" in s_str:
                 s_str = s_str.replace("<b>", "").replace("</b>", "")
                 cprint(s_str, configs["color"]["chords"], end="")
+
+            elif (first_pos := s_str.find('[')) >= 0 and (last_pos := s_str.find(']')) >= 0:
+                # only runs if there exists something between square brackets
+                to_replace = s_str[first_pos:last_pos+1]
+                s_str = s_str.replace(to_replace, colored(text=to_replace, color=configs["color"]["sections"]))
+                print(s_str, end="")
+
             else:
                 cprint(s_str + ("\n" if configs["sparse"] else ""), configs["color"]["lyrics"], end="")
 

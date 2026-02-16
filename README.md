@@ -27,9 +27,9 @@ As cores na cifra são baseadas em linhas pares e ímpares e as cores estão def
 
 ## Próximas alterações
 
-- [ ] Adicionar opção --no-cache
+- [x] Adicionar opção --no-cache
 - [ ] Fazer fuzzy finding no nome do artista
 - [ ] Tirar necessidade das aspas nos nomes
-- [ ] Adicionar opção --no-tabs (sem tablaturas)
-- [ ] Colorir somente os acordes de fato
+- [x] Adicionar opção --no-tabs (sem tablaturas)
+- [x] Colorir somente os acordes de fato
 - [ ] Melhorar UX
